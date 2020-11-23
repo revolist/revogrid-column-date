@@ -15,8 +15,8 @@ module.exports = {
   externals: {
     '@revolist/revogrid': '@revolist/revogrid',
     '@revolist/revogrid/loader': '@revolist/revogrid/loader',
-    '@revolist/revo-dropdown': '@revolist/revo-dropdown',
-    '@revolist/revo-dropdown/loader': '@revolist/revo-dropdown/loader'
+    '@duetds/date-picker': '@duetds/date-picker',
+    '@duetds/date-picker/dist/loader': '@duetds/date-picker/dist/loader'
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
@@ -27,7 +27,10 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-        
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },

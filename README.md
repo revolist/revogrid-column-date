@@ -1,11 +1,9 @@
-# `revogrid-column-select`
-Custom column type for [RevoGrid](https://github.com/revolist/revogrid) component based on [revo-dropdown](https://github.com/revolist/revodropdown) library.
-
-<img src="./public/assets/sample.png" alt="Autocomplete dropdown" width="100%" />
+# `revogrid-column-date`
+Custom column type for [RevoGrid](https://github.com/revolist/revogrid) component based on [duetds-date-picker](https://github.com/duetds/date-picker) library.
 
 
 ## Installation
-`npm i @revolist/revogrid-column-select`
+`npm i @revolist/revogrid-column-date`
 
 ## How to use
 
@@ -16,23 +14,16 @@ Custom column type for [RevoGrid](https://github.com/revolist/revogrid) componen
 ```js
 
 // do Select class import
-import SelectTypePlugin from "@revolist/revogrid-column-select";
+import Plugin from "@revolist/revogrid-column-date";
 
 const columns = [{
     prop: 'name',
-    labelKey: 'label',
-    valueKey: 'value',
-    source: [
-        { label: 'According', value: 'a' },
-        { label: 'Over', value: 'b' },
-        { label: 'Source', value: 's' }
-    ],
-    columnType: 'select' // column type specified as 'select'
+    columnType: 'date' // column type specified as 'select'
 }];
-const rows = [{ name: 'New item' }, { name: 'New item 2' }];
+const rows = [{ name: '2020-08-24' }, { name: '2022-08-24' }];
 
 // register column type
-const columnTypes = { 'select': new SelectTypePlugin() };
+const columnTypes = { 'date': new Plugin() };
 
 // apply data to grid per your framework approach
 <revo-grid source={rows} columns={columns} columnTypes={columnTypes}/>

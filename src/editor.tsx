@@ -1,13 +1,15 @@
+import '@duetds/date-picker/dist/duet/themes/default.css';
 import {Edition} from '@revolist/revogrid/dist/types/interfaces';
-import { ChangeValue, SelectConfig } from './type';
+import { DateChangeEvent, DateConfig } from './type';
 
 
-export class SelectColumnEditor implements Edition.EditorBase {
+export class ColumnEditor implements Edition.EditorBase {
+    private calendar: HTMLDuetDatePickerElement;
     constructor(
         // column data
-        private column: SelectConfig,
+        private column: DateConfig,
         // to save changes
-        private saveCallback: (value: Edition.SaveData, preventFocus?: boolean) => void,
+        private saveCallback: (value: any, preventFocus?: boolean) => void,
         // to close editor, if focusNext true, after close editor focus on next cell
         // private closeCallback: (focusNext?: boolean) => void
     ) {
@@ -15,34 +17,22 @@ export class SelectColumnEditor implements Edition.EditorBase {
 
     element?: HTMLSelectElement|null;
     editCell?: Edition.EditCell;
-    componentDidRender() {}
+    componentDidRender() {
+        this.calendar?.show();
+    }
     render(h: any) {
         let val = '';
-        let filter = '';
         if (this.editCell) {
             const model = this.editCell.model || {};
             val = model[this.editCell?.prop] || '';
         }
-        if (val !== this.editCell?.val) {
-            filter = this.editCell?.val;
-        }
-        return <revo-dropdown 
-            source={this.column?.source}
-            dataId={this.column?.valueKey}
-            dataLabel={this.column?.labelKey}
-            autocomplete={true}
-            autoFocus={true}
-            max-height='300'
+        return <duet-date-picker
+            {...this.column}
+            ref={(e: HTMLDuetDatePickerElement) => this.calendar = e}
             value={val}
-            currentFilter={filter}
-            onChangeValue={({detail}: CustomEvent<ChangeValue>) => {
-                // object field mapping has to be preserved
-                if (typeof detail.val === 'object') {
-                    this.saveCallback(detail.val.value);
-                // mapping by array strings
-                } else {
-                    this.saveCallback(detail.val);
-                }
-            }}/>;
+            onDuetChange={({detail: {value, valueAsDate}}: CustomEvent<DateChangeEvent>) => {
+                this.saveCallback(this.column.valueAsDate ? valueAsDate : value);
+            }
+        }/>;
     }
 }

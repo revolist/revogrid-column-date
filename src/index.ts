@@ -1,25 +1,16 @@
-import keyBy from 'lodash/keyBy';
-import { SelectColumnRenderer } from './renderer';
-import { SelectConfig } from './type';
-import { SelectColumnEditor } from './editor';
-import * as loader from '@revolist/revo-dropdown/loader';
+import { ColumnRenderer } from './renderer';
+import { ColumnEditor } from './editor';
+import * as loader from "@duetds/date-picker/dist/loader";
 
 export const Revogrid = window.Revogrid || {};
 
-export default class SelectColumnType {
+export default class ColumnType {
     constructor() {
         this.loadCustomComponent();
     }
-    readonly editor = SelectColumnEditor;
+    readonly editor = ColumnEditor;
 
-    beforeSetup = (col: SelectConfig) => {
-        if (!col.source) {
-            return;
-        }
-        col.sourceLookup = keyBy(col.source, col.valueKey);
-    };
-
-    cellTemplate = SelectColumnRenderer;
+    cellTemplate = ColumnRenderer;
 
     private loadCustomComponent() {
         if (loader?.defineCustomElements) {
@@ -27,4 +18,4 @@ export default class SelectColumnType {
         }
     }
 }
-Revogrid.SelectColumnType = SelectColumnType;
+Revogrid.DateColumnType = ColumnType;

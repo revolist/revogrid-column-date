@@ -1,4 +1,4 @@
-import { SelectConfig } from "./type";
+// import { DateConfig } from "./type";
 const style = {
     width: '0',
     height: '0',
@@ -10,12 +10,9 @@ const style = {
     verticalAlign: 'middle',
     opacity: '.4'
   };
-export const SelectColumnRenderer = (h: any, {model, prop, column}: any): any[] => {
-    let col = column as SelectConfig;
+export const ColumnRenderer = (h: any, {model, prop }: any): any[] => {
+    // let col = column as DateConfig;
     let val = model[prop];
-    if (col.labelKey && col.sourceLookup) {
-        val = col.sourceLookup[val][col.labelKey];
-    }
     return [
         <div class='cell-value-wrapper'>{val}</div>,
         <span class={{ 'arrow-down': true }}

@@ -1,7 +1,7 @@
 import './style.css';
 import Vue from 'vue';
 import Grid from '@revolist/vue-datagrid';
-import SelectColumnType from '../src';
+import Plugin from '../src';
 
 function generateHeader(index: number) {
   const asciiFirstLetter = 65;
@@ -34,29 +34,12 @@ function generateFakeDataObject(rowsNumber: number, colsNumber: number) {
       }
       result[row][col] = row + ':' + col;
       if (col === 1) {
-        /** select data as object
         columns[col] = {
             ...columns[col],
-            columnType: 'select',
-            size: 150,
-            labelKey: 'label',
-            valueKey: 'value',
-            source: [
-              { label: 'According', value: 'a' },
-              { label: 'Over', value: 'b' },
-              { label: 'Source', value: 's' }
-            ]
+            columnType: 'date',
+            size: 150
         }; 
-        result[row][col] = 'b';
-        */
-       /**  select data as array string[] */
-        columns[col] = {
-            ...columns[col],
-            columnType: 'select',
-            size: 150,
-            source: ['According', 'Source']
-        }; 
-        result[row][col] = 'According';
+        result[row][col] = '2020-08-24';
       }
   }
   let headers = Object.keys(columns).map((k) => columns[parseInt(k, 10)]);
@@ -80,7 +63,7 @@ new Vue({
         columns: headers,
         theme: 'material',
         columnTypes: {
-          'select': new SelectColumnType()
+          'date': new Plugin()
         }
       }
     })]);
