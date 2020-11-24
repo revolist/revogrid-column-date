@@ -8,6 +8,15 @@
     "serve": "webpack serve --config ./.webpack/webpack.dev.js"
   },
   "author": "revolist",
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revolist/revogrid-column-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/revolist/revogrid-column-date/issues"
+  },
+  "homepage": "https://github.com/revolist/revogrid-column-date#readme",
   "keywords": [
     "revo-grid",
     "revolist",
