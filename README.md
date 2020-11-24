@@ -13,13 +13,10 @@ Custom column type for [RevoGrid](https://github.com/revolist/revogrid) componen
 - Register your column type;
 ```js
 
-// do Select class import
+// do import
 import Plugin from "@revolist/revogrid-column-date";
 
-const columns = [{
-    prop: 'name',
-    columnType: 'date' // column type specified as 'select'
-}];
+const columns = [{ prop: 'name', columnType: 'date' // column type specified as 'select' }];
 const rows = [{ name: '2020-08-24' }, { name: '2022-08-24' }];
 
 // register column type
