@@ -40,6 +40,13 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.svg/,
+        use: {
+          loader: 'svg-url-loader',
+          options: {}
+        }
+      }
     ],
   },
 };

@@ -1,4 +1,5 @@
 import '@duetds/date-picker/dist/duet/themes/default.css';
+import './style.css';
 import {Edition} from '@revolist/revogrid/dist/types/interfaces';
 import { DateChangeEvent, DateConfig } from './type';
 

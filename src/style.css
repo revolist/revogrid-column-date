@@ -1,0 +1,39 @@
+revogr-edit duet-date-picker {
+    height: 100%;
+    display: block;
+}
+
+revogr-edit .duet-date {
+    height: 100%;
+}
+
+revogr-edit .duet-date__input-wrapper {
+    height: 100%;
+}
+
+revogr-edit .duet-date__input-wrapper input {
+    border-color: #0089ff;
+}
+
+revogr-edit .duet-date__toggle {
+    width: 27px;
+    box-shadow: none;
+}
+
+revogr-edit .duet-date__toggle svg {
+    width: 16px;
+}
+
+revogr-data .calendar {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    background: url(calendar.svg);
+    
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .5;
+}
