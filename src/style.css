@@ -15,6 +15,10 @@ revogr-edit .duet-date__input-wrapper input {
     border-color: #0089ff;
 }
 
+revogr-edit .duet-date__input {
+    padding-right: 30px;
+}
+
 revogr-edit .duet-date__toggle {
     width: 27px;
     box-shadow: none;
