@@ -1,6 +1,6 @@
 {
   "name": "@revolist/revogrid-column-date",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Date column type for RevoGrid system based on duetds-date-picker",
   "main": "dist/index.js",
   "scripts": {
