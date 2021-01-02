@@ -1,6 +1,6 @@
 {
   "name": "@revolist/revogrid-column-date",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Date column type for RevoGrid system based on duetds-date-picker",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,6 @@
     "serve": "webpack serve --config ./.webpack/webpack.dev.js"
   },
   "author": "revolist",
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/revolist/revogrid-column-date.git"
@@ -25,18 +24,19 @@
     "stenciljs",
     "reactive",
     "virtualgrid",
-    "virtual vue grid",
-    "react datagrid",
+    "virtual",
+    "react",
     "editable",
     "excel",
     "webcomponent",
     "datepicker",
     "date",
+    "vue",
     "duetds-date-picker"
   ],
   "license": "MIT",
   "devDependencies": {
-    "@revolist/vue-datagrid": "^1.1.1",
+    "@revolist/vue-datagrid": "^2.1.1",
     "@stencil/core": "^2.3.0",
     "@types/lodash": "^4.14.149",
     "clean-webpack-plugin": "^3.0.0",

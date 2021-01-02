@@ -1,30 +1,40 @@
-revogr-edit duet-date-picker {
+.revo-float {
+    position: fixed;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    min-height: 30px;
+}
+.revo-float duet-date-picker {
     height: 100%;
     display: block;
 }
 
-revogr-edit .duet-date {
+.revo-float .duet-date {
     height: 100%;
 }
 
-revogr-edit .duet-date__input-wrapper {
-    height: 100%;
+.revo-float .duet-date__input-wrapper {
+    position: relative;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
 }
 
-revogr-edit .duet-date__input-wrapper input {
+.revo-float .duet-date__input-wrapper input {
     border-color: #0089ff;
 }
 
-revogr-edit .duet-date__input {
+.revo-float .duet-date__input {
     padding-right: 30px;
 }
 
-revogr-edit .duet-date__toggle {
+.revo-float .duet-date__toggle {
     width: 27px;
     box-shadow: none;
 }
 
-revogr-edit .duet-date__toggle svg {
+.revo-float .duet-date__toggle svg {
     width: 16px;
 }
 

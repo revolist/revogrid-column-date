@@ -55,7 +55,7 @@ new Vue({
     Grid
   },
   render: (h) => {
-    const {source, headers} = generateFakeDataObject(100, 5);
+    const {source, headers} = generateFakeDataObject(5, 5);
     return h('div', { class: {'tile large': true} }, [h(Grid, {
       props: {
         source,
