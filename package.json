@@ -4,8 +4,8 @@
   "description": "Date column type for RevoGrid system based on duetds-date-picker",
   "main": "dist/index.js",
   "scripts": {
-    "build": "webpack --config ./.webpack/webpack.config.js",
-    "serve": "webpack serve --config ./.webpack/webpack.dev.js"
+    "build": "npx webpack build --mode=production --config ./.webpack/webpack.config.js",
+    "serve": "npx webpack serve --config ./.webpack/webpack.dev.js"
   },
   "author": "revolist",
   "repository": {
@@ -37,7 +37,7 @@
   "license": "MIT",
   "devDependencies": {
     "@revolist/vue-datagrid": "^2.1.1",
-    "@stencil/core": "^2.3.0",
+    "@stencil/core": "^4.18.3",
     "@types/lodash": "^4.14.149",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.1",
@@ -47,7 +47,7 @@
     "lodash": "4.17.20",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.6",
-    "typescript": "^4.0.3",
+    "typescript": "^5.4.5",
     "vue": "^2.6.12",
     "webpack": "^5.1.3",
     "webpack-cli": "^4.1.0",
@@ -55,6 +55,6 @@
     "svg-url-loader": "^6.0.0"
   },
   "dependencies": {
-    "@duetds/date-picker": "^1.1.0"
+    "@duetds/date-picker": "^1.4.0"
   }
 }

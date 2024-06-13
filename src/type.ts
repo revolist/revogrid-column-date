@@ -1,7 +1,8 @@
-import { RevoGrid } from '@revolist/revogrid/dist/types/interfaces';
-export interface DateConfig extends RevoGrid.ColumnRegular {
+import { ColumnRegular } from '@revolist/revogrid';
+export interface DateConfig extends ColumnRegular {
     // if you wish to operate Date types
     valueAsDate?: boolean;
+    appendTo?: 'body' | Element;
 }
 
 export type DateChangeEvent = {
