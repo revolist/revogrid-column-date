@@ -9,16 +9,19 @@
 .revo-float duet-date-picker {
     height: 100%;
     display: block;
+    font-size: 14px;
 }
 
 .revo-float .duet-date {
     height: 100%;
+    display: flex;
 }
 
 .revo-float .duet-date__input-wrapper {
     position: relative;
     width: 100%;
     box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+    display: flex;
 }
 
 .revo-float .duet-date__input-wrapper input {
@@ -26,7 +29,8 @@
 }
 
 .revo-float .duet-date__input {
-    padding-right: 30px;
+    padding: 0 30px 0 10px;
+    font-size: inherit;
 }
 
 .revo-float .duet-date__toggle {

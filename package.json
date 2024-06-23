@@ -1,8 +1,10 @@
 {
   "name": "@revolist/revogrid-column-date",
-  "version": "1.1.0",
-  "description": "Date column type for RevoGrid system based on duetds-date-picker",
-  "main": "dist/index.js",
+  "version": "2.0.0",
+  "description": "Date format for RevoGrid system based on duetds-date-picker",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "npx webpack build --mode=production --config ./.webpack/webpack.config.js",
     "serve": "npx webpack serve --config ./.webpack/webpack.dev.js"
@@ -31,12 +33,10 @@
     "webcomponent",
     "datepicker",
     "date",
-    "vue",
     "duetds-date-picker"
   ],
   "license": "MIT",
   "devDependencies": {
-    "@revolist/vue-datagrid": "^2.1.1",
     "@stencil/core": "^4.18.3",
     "@types/lodash": "^4.14.149",
     "clean-webpack-plugin": "^3.0.0",
@@ -48,7 +48,6 @@
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.6",
     "typescript": "^5.4.5",
-    "vue": "^2.6.12",
     "webpack": "^5.1.3",
     "webpack-cli": "^4.1.0",
     "webpack-dev-server": "^3.11.0",

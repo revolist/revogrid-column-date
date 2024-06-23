@@ -1,71 +1,38 @@
 import './style.css';
-import Vue from 'vue';
-import Grid from '@revolist/vue-datagrid';
+import { defineCustomElements } from '@revolist/revogrid/loader';
 import Plugin from '../src';
 
-function generateHeader(index: number) {
-  const asciiFirstLetter = 65;
-  const lettersCount = 26;
-  let div = index + 1;
-  let label = '';
-  let pos: number;
-  while (div > 0) {
-      pos = (div - 1) % lettersCount;
-      label = String.fromCharCode(asciiFirstLetter + pos) + label;
-      div = parseInt(((div - pos) / lettersCount).toString(), 10);
-  }
-  return label.toLowerCase();
-}
-function generateFakeDataObject(rowsNumber: number, colsNumber: number) {
-  const result: Record<any, any> = [];
-  const columns: Record<number, any> = {};
-  const all = colsNumber * rowsNumber;
-  for (let j = 0; j < all; j++) {
-      let col = j%colsNumber;
-      let row = j/colsNumber|0;
-      if (!result[row]) {
-          result[row] = {};
-      }
-      if (!columns[col]) {
-          columns[col] = {
-              name: generateHeader(col),
-              prop: col,
-          }
-      }
-      result[row][col] = row + ':' + col;
-      if (col === 1) {
-        columns[col] = {
-            ...columns[col],
-            columnType: 'date',
-            size: 150
-        }; 
-        result[row][col] = '2020-08-24';
-      }
-  }
-  let headers = Object.keys(columns).map((k) => columns[parseInt(k, 10)]);
-  return {
-    source: result,
-    headers
-  };
-}
+defineCustomElements();
 
-new Vue({
-  el: '#app',
-  components: {
-    Grid
+const app = document.querySelector('#app');
+const grid = document.createElement('revo-grid');
+
+const COLUMN_TYPE_DATE = 'date';
+
+// define columns
+grid.columns = [
+  { name: 'A', prop: 'name', size: 250 },
+  {
+    name: 'B',
+    prop: 'date',
+    size: 150,
+    // provide column type format
+    columnType: COLUMN_TYPE_DATE,
   },
-  render: (h) => {
-    const {source, headers} = generateFakeDataObject(5, 5);
-    return h('div', { class: {'tile large': true} }, [h(Grid, {
-      props: {
-        source,
-        resize: true,
-        columns: headers,
-        theme: 'material',
-        columnTypes: {
-          'date': new Plugin()
-        }
-      }
-    })]);
-  }
-});
+];
+grid.source = [
+  {
+    name: 'Mark',
+    date: '2020-08-24',
+  },
+  {
+    name: 'Kate',
+    date: '2020-08-24',
+  },
+];
+
+// define formats
+grid.columnTypes = {
+  [COLUMN_TYPE_DATE]: new Plugin(),
+};
+app?.appendChild(grid);

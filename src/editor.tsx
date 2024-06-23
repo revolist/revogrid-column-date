@@ -1,7 +1,7 @@
 import '@duetds/date-picker/dist/duet/themes/default.css';
 import './style.css';
 import { h } from '@stencil/core';
-import { EditorBase, EditCell } from '@revolist/revogrid';
+import { EditorBase, EditCell, VNode } from '@revolist/revogrid';
 import { DateChangeEvent, DateConfig } from './type';
 
 type DateChange = CustomEvent<DateChangeEvent>;
@@ -58,7 +58,7 @@ export class ColumnEditor implements EditorBase {
     this.revoFloat = null;
   }
 
-  render() {
+  render(): VNode {
     let val = '';
     if (this.editCell) {
       const model = this.editCell.model || {};

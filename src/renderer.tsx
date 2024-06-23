@@ -1,5 +1,10 @@
 import { h } from '@stencil/core';
-export const ColumnRenderer = (_: any, { model, prop }: any): any[] => {
+import { ColumnDataSchemaModel, HyperFunc, VNode } from '@revolist/revogrid';
+
+export const ColumnRenderer = (
+  _: HyperFunc<VNode>,
+  { model, prop }: ColumnDataSchemaModel,
+): VNode[] => {
   let val = model[prop];
   return [
     <div class="cell-value-wrapper">{val}</div>,
@@ -13,6 +18,6 @@ export const ColumnRenderer = (_: any, { model, prop }: any): any[] => {
         });
         e.target.dispatchEvent(ev);
       }}
-    ></span>,
+    />,
   ];
 };

@@ -1,25 +1,18 @@
 const path = require('path');
 
 let libraryName = 'index';
-module.exports = {
+const common = {
   entry: {
-    [libraryName]: './src/index.ts'
-  },
-  output: {
-    path: path.resolve(__dirname, '../dist'),
-    filename: '[name].js',
-    library: libraryName,
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
+    [libraryName]: './src/index.ts',
   },
   externals: {
     '@revolist/revogrid': '@revolist/revogrid',
     '@revolist/revogrid/loader': '@revolist/revogrid/loader',
     '@duetds/date-picker': '@duetds/date-picker',
-    '@duetds/date-picker/dist/loader': '@duetds/date-picker/dist/loader'
+    '@duetds/date-picker/dist/loader': '@duetds/date-picker/dist/loader',
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ],
+    extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     rules: [
@@ -34,8 +27,31 @@ module.exports = {
       },
       {
         test: /\.svg/,
-        use: ['svg-url-loader']
-      }
+        use: ['svg-url-loader'],
+      },
     ],
   },
 };
+module.exports = [
+  {
+    ...common,
+    output: {
+      path: path.resolve(__dirname, '../dist'),
+      filename: '[name].umd.js',
+      library: libraryName,
+      libraryTarget: 'umd',
+      umdNamedDefine: true,
+    },
+  },
+  {
+    ...common,
+    output: {
+      path: path.resolve(__dirname, '../dist'),
+      filename: '[name].mjs',
+      libraryTarget: 'module',
+    },
+    experiments: {
+      outputModule: true // Enables experimental support for ESM output
+    },
+  },
+];
