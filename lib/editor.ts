@@ -1,10 +1,12 @@
 import '@duetds/date-picker/dist/duet/themes/default.css';
 import './style.css';
-import { h } from '@stencil/core';
-import { EditorBase, EditCell, VNode } from '@revolist/revogrid';
-import { DateChangeEvent, DateConfig } from './type';
-
-type DateChange = CustomEvent<DateChangeEvent>;
+import type {
+  EditorBase,
+  EditCell,
+  VNode,
+  HyperFunc,
+} from '@revolist/revogrid';
+import type { DateChangeEvent, DateConfig } from './type';
 
 function updatePosition(
   cellPosition: DOMRect,
@@ -58,32 +60,36 @@ export class ColumnEditor implements EditorBase {
     this.revoFloat = null;
   }
 
-  render(): VNode {
+  render(h: HyperFunc<VNode>) {
     let val = '';
     if (this.editCell) {
       const model = this.editCell.model || {};
       val = model[this.editCell?.prop] || '';
     }
-    return (
-      <div class="revo-holder">
-        <div
-          class="revo-float"
-          onMouseUp={(e: MouseEvent) => {
+
+    return h('div', { class: 'revo-holder' }, [
+      h(
+        'div',
+        {
+          class: 'revo-float',
+          onMouseUp: (e: MouseEvent) => {
             // this is required to keep focus on grid
             e.stopPropagation();
-          }}
-          ref={(e: HTMLElement) => (this.revoFloat = e)}
-        >
-          <duet-date-picker
-            {...this.column}
-            ref={(e: HTMLDuetDatePickerElement) => (this.calendar = e)}
-            value={val}
-            onDuetChange={({ detail: { value, valueAsDate } }: DateChange) =>
-              this.saveCallback(this.column.valueAsDate ? valueAsDate : value)
-            }
-          />
-        </div>
-      </div>
-    );
+          },
+          ref: (e: HTMLElement) => (this.revoFloat = e),
+        },
+        [
+          h('duet-date-picker', {
+            ...this.column,
+            ref: (e: HTMLDuetDatePickerElement) => (this.calendar = e),
+            value: val,
+            onDuetChange: ({
+              detail: { value, valueAsDate },
+            }: CustomEvent<DateChangeEvent>) =>
+              this.saveCallback(this.column.valueAsDate ? valueAsDate : value),
+          }),
+        ],
+      ),
+    ]);
   }
 }

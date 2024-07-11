@@ -1,13 +1,38 @@
-import { ColumnRenderer } from './renderer';
-import { ColumnEditor } from './editor';
-import { defineCustomElements } from '@duetds/date-picker/dist/loader';
+import './style.css';
+import { defineCustomElements } from '@revolist/revogrid/loader';
+import Plugin from '../lib';
 
-defineCustomElements?.();
+defineCustomElements();
 
-export const Revogrid = window.Revogrid || {};
+const app = document.querySelector('#app');
+const grid = document.createElement('revo-grid');
 
-export default class ColumnType {
-  readonly editor = ColumnEditor;
-  cellTemplate = ColumnRenderer;
-}
-Revogrid.DateColumnType = ColumnType;
+const COLUMN_TYPE_DATE = 'date';
+
+// define columns
+grid.columns = [
+  { name: 'A', prop: 'name', size: 250 },
+  {
+    name: 'B',
+    prop: 'date',
+    size: 150,
+    // provide column type format
+    columnType: COLUMN_TYPE_DATE,
+  },
+];
+grid.source = [
+  {
+    name: 'Mark',
+    date: '2020-08-24',
+  },
+  {
+    name: 'Kate',
+    date: '2020-08-24',
+  },
+];
+
+// define formats
+grid.columnTypes = {
+  [COLUMN_TYPE_DATE]: new Plugin(),
+};
+app?.appendChild(grid);

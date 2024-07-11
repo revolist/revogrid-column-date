@@ -1,57 +1,18 @@
-.revo-float {
-    position: fixed;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    min-height: 30px;
-}
-.revo-float duet-date-picker {
-    height: 100%;
-    display: block;
-    font-size: 14px;
+html {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  text-align: center;
 }
 
-.revo-float .duet-date {
-    height: 100%;
-    display: flex;
+revo-grid {
+  margin-top: 1000px;
 }
 
-.revo-float .duet-date__input-wrapper {
-    position: relative;
-    width: 100%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
-    display: flex;
-}
-
-.revo-float .duet-date__input-wrapper input {
-    border-color: #0089ff;
-}
-
-.revo-float .duet-date__input {
-    padding: 0 30px 0 10px;
-    font-size: inherit;
-}
-
-.revo-float .duet-date__toggle {
-    width: 27px;
-    box-shadow: none;
-}
-
-.revo-float .duet-date__toggle svg {
-    width: 16px;
-}
-
-revogr-data .calendar {
-    position: absolute;
-    right: 5px;
-    top: 0;
-    width: 20px;
-    height: 100%;
-    background: url(calendar.svg);
-    
-    background-size: 16px;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: .5;
+.arrow-down svg {
+  opacity: 1;
+  width: 10px;
+  height: 10px;
 }

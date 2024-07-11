@@ -22,7 +22,7 @@
     "sourceMap": true
   },
   "include": [
-    "src",
+    "lib",
     "types/tsx.d.ts"
   ],
   "exclude": [
