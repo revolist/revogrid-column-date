@@ -13,3 +13,8 @@ export default class ColumnType {
   cellTemplate = ColumnRenderer;
 }
 
+// Ensure it's available on window for UMD/IIFE builds
+if (typeof window !== 'undefined') {
+  (window as any).RevoColumnType = ColumnType;
+}
+
