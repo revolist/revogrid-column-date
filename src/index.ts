@@ -1,6 +1,6 @@
 import './style.css';
 import { defineCustomElements } from '@revolist/revogrid/loader';
-import Plugin from '../lib';
+import Plugin from '@revolist/revogrid-column-date';
 
 defineCustomElements();
 

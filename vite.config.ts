@@ -29,6 +29,11 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    alias: {
+      '@revolist/revogrid-column-date': resolve(__dirname, './lib'),
+    },
+  },
   // this is for local development
   // server: {
   //   open: '/demo/index.html',

@@ -26,7 +26,7 @@ export class ColumnEditor implements EditorBase {
   private revoFloat: HTMLElement;
   constructor(
     //
-    private column: DateConfig,
+    private data: DateConfig,
     // to save changes
     private saveCallback: (value: any, preventFocus?: boolean) => void,
     // to close editor, if focusNext true, after close editor focus on next cell
@@ -41,9 +41,9 @@ export class ColumnEditor implements EditorBase {
       return;
     }
     const appendTo =
-      !this.column.appendTo || this.column.appendTo == 'body'
+      !this.data.column.appendTo || this.data.column.appendTo == 'body'
         ? document.body
-        : this.column.appendTo;
+        : this.data.column.appendTo;
 
     updatePosition(
       this.element.getBoundingClientRect(),
@@ -80,13 +80,13 @@ export class ColumnEditor implements EditorBase {
         },
         [
           h('duet-date-picker', {
-            ...this.column,
+            ...this.data.column,
             ref: (e: HTMLDuetDatePickerElement) => (this.calendar = e),
             value: val,
             onDuetChange: ({
               detail: { value, valueAsDate },
             }: CustomEvent<DateChangeEvent>) =>
-              this.saveCallback(this.column.valueAsDate ? valueAsDate : value),
+              this.saveCallback(this.data.column.valueAsDate ? valueAsDate : value),
           }),
         ],
       ),
