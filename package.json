@@ -1,6 +1,6 @@
 {
   "name": "@revolist/revogrid-column-date",
-  "version": "2.0.22",
+  "version": "2.0.23",
   "description": "Date format for RevoGrid system based on duetds-date-picker",
   "module": "./dist/revogrid-column-date.js",
   "main": "./dist/revogrid-column-date.umd.cjs",
@@ -51,7 +51,7 @@
   "license": "MIT",
   "devDependencies": {
     "@duetds/date-picker": "^1.4.0",
-    "@revolist/revogrid": "^4.8.13",
+    "@revolist/revogrid": "^4.10.1",
     "@types/lodash": "^4.14.149",
     "lodash": "4.17.20",
     "typescript": "^5.2.2",

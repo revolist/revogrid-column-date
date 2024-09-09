@@ -43,14 +43,17 @@
 
 revogr-data .calendar {
     position: absolute;
-    right: 5px;
+    right: 0;
     top: 0;
-    width: 20px;
+    border: 0;
+    width: 24px;
     height: 100%;
-    background: url(calendar.svg);
-    
-    background-size: 14px;
-    background-repeat: no-repeat;
-    background-position: center;
     opacity: .5;
+    text-align: center;
+    background-color: transparent;
+
+    svg {
+        width: 14px;
+        vertical-align: middle;
+    }
 }
