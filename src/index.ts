@@ -9,10 +9,10 @@ const app = document.querySelector('#app');
 const grid = document.createElement('revo-grid');
 
 const COLUMN_TYPE_DATE = 'date';
-
+grid.theme = 'compact';
 // define columns
 grid.columns = [
-  { prop: 'lastName', size: 100 },
+  { name: 'Last Name', prop: 'lastName', size: 200 },
   {
     name: 'Birthday',
     prop: 'birthday',
