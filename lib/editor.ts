@@ -53,6 +53,10 @@ export class ColumnEditor implements EditorBase {
     );
   }
 
+  private isDate(value: any): value is Date {
+    return Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime());
+  }
+
   disconnectedCallback() {
     this.calendar?.hide();
     this.revoFloat?.remove();
@@ -65,6 +69,9 @@ export class ColumnEditor implements EditorBase {
     if (this.editCell) {
       const model = this.editCell.model || {};
       val = model[this.editCell?.prop] || '';
+    }
+    if (this.isDate(val)) {
+      val = val.toISOString().split('T')[0];
     }
 
     return h('div', { class: 'revo-holder' }, [
@@ -83,10 +90,17 @@ export class ColumnEditor implements EditorBase {
             ...this.data.column,
             ref: (e: HTMLDuetDatePickerElement) => (this.calendar = e),
             value: val,
+
             onDuetChange: ({
               detail: { value, valueAsDate },
             }: CustomEvent<DateChangeEvent>) =>
               this.saveCallback(this.data.column.valueAsDate ? valueAsDate : value),
+            onDuetOpen: () => {
+              const { bottom } = this.revoFloat?.getBoundingClientRect() || {};
+              const { clientHeight } = document.body;
+              const position = bottom + 300 > clientHeight ? 'top' : 'bottom';
+              this.calendar?.setAttribute('position', position);
+            },
           }),
         ],
       ),

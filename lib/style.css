@@ -11,6 +11,11 @@
     font-size: 14px;
 }
 
+.revo-float duet-date-picker[position="top"] .duet-date__dialog {
+    top: inherit;
+    bottom: 100%;
+}
+
 .revo-float .duet-date {
     height: 100%;
     display: flex;
@@ -51,9 +56,8 @@ revogr-data .calendar {
     opacity: .5;
     text-align: center;
     background-color: transparent;
-
-    svg {
-        width: 14px;
-        vertical-align: middle;
-    }
+}
+revogr-data .calendar svg {
+    width: 14px;
+    vertical-align: middle;
 }

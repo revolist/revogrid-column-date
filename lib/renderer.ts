@@ -22,11 +22,10 @@ const svg = `<svg aria-hidden="true" viewBox="0 0 21 21" xmlns="http://www.w3.or
 
 export const ColumnRenderer = (
   h: HyperFunc<VNode>,
-  { model, prop }: ColumnDataSchemaModel,
-): VNode[] => {
-  let val = model[prop];
+  { value }: ColumnDataSchemaModel,
+) => {
   return [
-    h('div', { class: { 'cell-value-wrapper': true } }, [val]),
+    h('div', { class: { 'cell-value-wrapper': true } }, value?.toString()),
     h('button', {
       class: { calendar: true },
       innerHTML: svg,

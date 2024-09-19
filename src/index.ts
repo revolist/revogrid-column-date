@@ -1,6 +1,7 @@
 import './style.css';
 import { defineCustomElements } from '@revolist/revogrid/loader';
 import Plugin from '@revolist/revogrid-column-date';
+import { makeData } from './makeData';
 
 defineCustomElements();
 
@@ -11,26 +12,17 @@ const COLUMN_TYPE_DATE = 'date';
 
 // define columns
 grid.columns = [
-  { name: 'A', prop: 'name', size: 250 },
+  { prop: 'lastName', size: 100 },
   {
-    name: 'B',
-    prop: 'date',
+    name: 'Birthday',
+    prop: 'birthday',
     size: 150,
+    valueAsDate: true,
     // provide column type format
     columnType: COLUMN_TYPE_DATE,
   },
 ];
-grid.source = [
-  {
-    name: 'Mark',
-    date: '2020-08-24',
-  },
-  {
-    name: 'Kate',
-    date: '2020-08-24',
-  },
-];
-
+grid.source = makeData(120);
 // define formats
 grid.columnTypes = {
   [COLUMN_TYPE_DATE]: new Plugin(),
