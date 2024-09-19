@@ -1,4 +1,4 @@
-html {
+html, body {
   height: 100%;
   width: 100%;
   padding: 0;
@@ -11,4 +11,12 @@ html {
   opacity: 1;
   width: 10px;
   height: 10px;
+}
+
+#app {
+  height: 100%;
+}
+
+revo-grid {
+  height: 100%;
 }
