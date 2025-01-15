@@ -57,6 +57,10 @@ export class ColumnEditor implements EditorBase {
     return Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime());
   }
 
+  getValue() {
+    return this.calendar?.value;
+  }
+
   disconnectedCallback() {
     this.calendar?.hide();
     this.revoFloat?.remove();
