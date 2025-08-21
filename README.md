@@ -1,9 +1,3 @@
-### 🚨 Repository Notice 🚨
-
-This repo is read-only and will be **deprecated** in v5+ in favor of monorepos. Post issues [here](https://github.com/revolist/revogrid). Happy coding! 🖥️💻
-
----
-
 # `revogrid-column-date`
 Custom column type for [RevoGrid](https://github.com/revolist/revogrid) component based on [duetds-date-picker](https://github.com/duetds/date-picker) library.
 
