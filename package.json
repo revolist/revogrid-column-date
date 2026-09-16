@@ -57,7 +57,7 @@
     "lodash": "4.17.20",
     "typescript": "^5.2.2",
     "vite": "^5.3.3",
-    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-dts": "^5.1.0",
     "vite-plugin-libcss": "^1.1.1"
   },
   "publishConfig": {
