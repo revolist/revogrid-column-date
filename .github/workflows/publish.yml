@@ -7,21 +7,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
-        node-version: '22.x'
-        registry-url: 'https://registry.npmjs.org'
+        node-version: 24.x
+        registry-url: https://registry.npmjs.org
     - run: npm ci
     # Build
     - run: npm run build
     # Publish to npm
-    - run: npm publish --access public
+    - run: npm publish --access public --registry=https://registry.npmjs.org
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     # Setup .npmrc file to publish to GitHub Packages
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         registry-url: 'https://npm.pkg.github.com'
         # Defaults to the user or organization that owns the workflow file
