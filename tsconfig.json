@@ -19,14 +19,16 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "skipLibCheck": true
   },
   "include": [
     "lib",
     "types/tsx.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib/**/*.test.ts"
   ]
 }
 

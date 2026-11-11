@@ -4,6 +4,7 @@ import { defineCustomElements } from '@duetds/date-picker/custom-element';
 
 export * from './editor';
 export * from './renderer';
+export type { DateConfig, DateAdapter } from './type';
 
 export default class ColumnType {
   constructor() {
