@@ -14,6 +14,14 @@ export interface DateConfig extends ColumnDataSchemaModel {
   column: ColumnRegular & {
     // if you wish to operate Date types
     valueAsDate?: boolean;
+    /** Defaults to true. False enables staged, keyboard-first date entry. */
+    openCalendarOnEdit?: boolean;
+    /** Select the existing value on entry; defaults to true in keyboard-first mode. */
+    selectOnFocus?: boolean;
+    /** Insert ISO separators during keyboard-first typing. Use without a custom dateAdapter. */
+    inputMask?: 'YYYY-MM-DD';
+    /** Localized validation message for incomplete, unavailable or invalid dates. */
+    invalidDateMessage?: string;
     appendTo?: 'body' | Element;
     /** Optional Duet adapter used to parse and format the date editor input. */
     dateAdapter?: DateAdapter;

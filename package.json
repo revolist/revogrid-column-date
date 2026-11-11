@@ -20,7 +20,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "release": "npm run build && npm publish --public --tag pre-release"
+    "release": "npm run build && npm publish --public --tag pre-release",
+    "test": "vitest run",
+    "test:browser": "playwright test"
   },
   "author": "revolist",
   "repository": {
@@ -52,13 +54,16 @@
   "devDependencies": {
     "@duetds/date-picker": "^1.4.0",
     "@faker-js/faker": "^10.5.0",
+    "@playwright/test": "1.59.1",
     "@revolist/revogrid": "^4.10.8",
     "@types/lodash": "^4.14.149",
+    "happy-dom": "^21.0.4",
     "lodash": "4.18.1",
     "typescript": "^5.2.2",
     "vite": "^8.3.0",
     "vite-plugin-dts": "^5.1.2",
-    "vite-plugin-libcss": "^1.1.1"
+    "vite-plugin-libcss": "^1.1.1",
+    "vitest": "^5.0.5"
   },
   "publishConfig": {
     "access": "public"
