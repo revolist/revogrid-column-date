@@ -30,6 +30,13 @@ grid.columns = [
     } } : {}),
     ...(params.has('mask') ? { inputMask: 'YYYY-MM-DD' } : {}),
     ...(params.has('asDate') ? { valueAsDate: true } : {}),
+    ...(params.has('localized') ? {
+      localization: {
+        locale: 'de-DE',
+        calendarHeading: 'Datum wählen',
+        closeLabel: 'Schließen',
+      },
+    } : {}),
   },
   { prop: 'next', size: 160 },
 ];

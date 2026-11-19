@@ -1,6 +1,6 @@
 import type { DateAdapter } from './type';
 
-/** Use civil dates Duet can round-trip without JavaScript's legacy year offset. */
+/** Validate each civil date part before creating a local Date. */
 export function createDate(year: string, month: string, day: string): Date {
   const y = Number(year);
   const m = Number(month);
@@ -33,6 +33,10 @@ export const isoAdapter: DateAdapter = {
   },
   format: isoDate,
 };
+export function parseIsoDate(value: string | undefined) {
+  return value ? isoAdapter.parse(value, createDate) : undefined;
+}
+
 /** Keep entered separators and caret positions stable while accepting compact ISO digits. */
 export function maskDateInput(input: HTMLInputElement): void {
   const text = input.value;

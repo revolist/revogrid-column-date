@@ -1,5 +1,5 @@
 # `revogrid-column-date`
-Custom column type for [RevoGrid](https://github.com/revolist/revogrid) component based on [duetds-date-picker](https://github.com/duetds/date-picker) library.
+Custom column type for [RevoGrid](https://github.com/revolist/revogrid) with the shared [Revo UI](https://rv-grid.com/) calendar.
 
 
 ## Installation
@@ -42,12 +42,13 @@ const columns = [{
 
 Typing or pasting `20261111` inserts `2026-11-11`. Enter saves and moves down;
 Tab saves and moves right, Shift+Tab moves left, and Escape cancels. Typing is
-staged until commit. The existing calendar button remains available.
+staged until commit. The existing calendar button remains available. Alt+Down also opens the calendar from the
+input. Dismissing the calendar restores focus to the input and keeps the draft.
 
 `openCalendarOnEdit` defaults to `true`, preserving calendar-first editing.
 `selectOnFocus` defaults to `true` in keyboard-first mode; set it to `false` to
 keep the caret without selecting. `inputMask` is optional in keyboard-first mode and uses ISO input
-formatting; omit it when supplying a custom Duet `dateAdapter`.
+formatting; omit it when supplying a custom `dateAdapter`.
 
 Keyboard commits validate complete dates in years 0100 through 9999 and respect
 `required`, `min`, `max`, and `isDateDisabled`. Invalid drafts stay editable.

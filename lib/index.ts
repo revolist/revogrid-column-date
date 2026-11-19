@@ -1,15 +1,11 @@
 import { ColumnRenderer } from './renderer';
 import { ColumnEditor } from './editor';
-import { defineCustomElements } from '@duetds/date-picker/custom-element';
 
 export * from './editor';
 export * from './renderer';
-export type { DateConfig, DateAdapter } from './type';
+export type { DateConfig, DateAdapter, DateLocalization } from './type';
 
 export default class ColumnType {
-  constructor() {
-    defineCustomElements?.();
-  }
   readonly editor = ColumnEditor;
   cellTemplate = ColumnRenderer;
 }
