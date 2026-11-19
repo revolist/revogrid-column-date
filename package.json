@@ -1,6 +1,6 @@
 {
   "name": "@revolist/revogrid-column-date",
-  "version": "2.0.27",
+  "version": "3.0.0",
   "description": "Date editor and calendar for RevoGrid",
   "module": "./dist/revogrid-column-date.js",
   "main": "./dist/revogrid-column-date.umd.cjs",
