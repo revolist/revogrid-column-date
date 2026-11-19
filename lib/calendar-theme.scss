@@ -1,0 +1,11 @@
+@use '@revolist/ui/dropdown/editor-dropdown.style.scss';
+@use '@revolist/ui/styles/_theme.scss' as theme;
+
+// The floating editor sits outside the grid and needs its own UI tokens.
+.revo-date-editor {
+    @include theme.rv-ui-light-tokens;
+
+    &.revo-date-editor-dark {
+        @include theme.rv-ui-dark-tokens;
+    }
+}

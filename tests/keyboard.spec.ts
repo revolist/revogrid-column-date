@@ -315,3 +315,22 @@ test('dismissing the shared calendar restores the grid input and preserves its d
   expect(await page.locator('revo-grid').evaluate(grid => grid.source[0].date))
     .toBe('2026-11-20');
 });
+
+test('the floating editor inherits grid typography and bundles dropdown styles', async ({ page }) => {
+  await page.goto('/tests/editor.html');
+  const grid = page.locator('revo-grid');
+  await grid.evaluate(el => {
+    el.style.fontFamily = 'monospace';
+  });
+  await page.locator('[data-rgrow="0"][data-rgcol="0"]').first().dblclick();
+  const input = page.locator('.revo-date-input');
+  await expect(input).toHaveCSS('font-family', 'monospace');
+
+  await page.getByRole('button', { name: 'Choose date' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toHaveCSS('font-family', 'monospace');
+  await dialog.getByRole('combobox', { name: 'Choose month' }).click();
+  const option = dialog.getByRole('option', { name: 'Nov', exact: true });
+  await expect(option).toHaveCSS('list-style-type', 'none');
+  await expect(option).toHaveCSS('font-family', 'monospace');
+});

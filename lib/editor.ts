@@ -48,7 +48,16 @@ export class ColumnEditor implements EditorBase {
     this.revoFloat.style.transform = `translate(${left}px, ${top}px)`;
     this.revoFloat.style.width = `${width}px`;
     this.revoFloat.style.height = `${height}px`;
-    if (this.revoFloat.parentElement !== parent) parent.append(this.revoFloat);
+    if (this.revoFloat.parentElement !== parent) {
+      const style = this.element.ownerDocument.defaultView?.getComputedStyle(this.element);
+      if (style) {
+        this.revoFloat.style.fontFamily = style.fontFamily;
+        this.revoFloat.style.fontSize = style.fontSize;
+        this.revoFloat.style.lineHeight = style.lineHeight;
+        this.revoFloat.classList.toggle('revo-date-editor-dark', style.colorScheme === 'dark');
+      }
+      parent.append(this.revoFloat);
+    }
     if (this.initialized) return;
     this.initialized = true;
 

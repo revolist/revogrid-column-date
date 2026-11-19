@@ -1,3 +1,4 @@
+import './calendar-theme.scss';
 import '@revolist/ui/styles/calendar.css';
 import { CalendarPicker } from '@revolist/ui/calendar/index';
 import { renderPreactInto } from '@revolist/ui/preact-mount';
