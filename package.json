@@ -55,7 +55,7 @@
     "@faker-js/faker": "^10.5.0",
     "@playwright/test": "1.59.1",
     "@revolist/revogrid": "^4.10.8",
-    "@revolist/ui": "^4.0.30",
+    "@revolist/ui": "^4.0.31",
     "@types/lodash": "^4.14.149",
     "happy-dom": "^21.0.4",
     "lodash": "4.18.1",
