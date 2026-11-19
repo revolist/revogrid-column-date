@@ -6,7 +6,7 @@ import libCss from 'vite-plugin-libcss';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    dts({ rollupTypes: true, include: ['lib'] }), libCss(),
+    dts({ rollupTypes: true, include: ['lib'], exclude: ['lib/**/*.test.ts'] }), libCss(),
   ],
   build: {
     minify: false,
