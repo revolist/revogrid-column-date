@@ -1,12 +1,26 @@
 import type { DateAdapter } from './type';
 
-/** Duet's civil-date constructor without JavaScript's special treatment of years 0–99. */
+/** Use civil dates Duet can round-trip without JavaScript's legacy year offset. */
 export function createDate(year: string, month: string, day: string): Date {
-  const date = new Date(0);
-  date.setFullYear(Number(year), Number(month) - 1, Number(day));
-  date.setHours(0, 0, 0, 0);
-  return date;
+  const y = Number(year);
+  const m = Number(month);
+  const d = Number(day);
+  const date = new Date(y, m - 1, d);
+  return y >= 100 && y <= 9999 &&
+    date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d
+    ? date
+    : new Date(NaN);
 }
+
+export function isDate(value: unknown): value is Date {
+  return Object.prototype.toString.call(value) === '[object Date]' &&
+    !isNaN(Date.prototype.getTime.call(value));
+}
+
+export function utcDate(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
 export function isoDate(date: Date): string {
   return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }

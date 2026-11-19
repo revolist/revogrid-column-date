@@ -49,10 +49,12 @@ staged until commit. The existing calendar button remains available.
 keep the caret without selecting. `inputMask` is optional in keyboard-first mode and uses ISO input
 formatting; omit it when supplying a custom Duet `dateAdapter`.
 
-Keyboard commits validate complete dates and respect `required`, `min`, `max`
-and `isDateDisabled`. Invalid drafts stay editable. In keyboard-first mode,
-`valueAsDate: true` saves dates at UTC midnight so reopening shows the same day.
-Clearing an optional value saves `null` in that mode, or `''` otherwise.
+Keyboard commits validate complete dates in years 0100 through 9999 and respect
+`required`, `min`, `max`, and `isDateDisabled`. Invalid drafts stay editable.
+In keyboard-first mode, the cell and editor display the same UTC calendar day
+for `Date` values. With `valueAsDate: true`, changing the date saves UTC midnight
+and keeping the same day preserves its timestamp. Clearing an optional value
+saves `null` in that mode, or `''` otherwise.
 
 Run `pnpm test` for unit tests and `pnpm test:browser` for browser regressions
 (after `pnpm exec playwright install chromium` on a new machine).

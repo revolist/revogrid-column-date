@@ -15,8 +15,10 @@ grid.columns = [
           openCalendarOnEdit: false,
           selectOnFocus: true,
           inputMask: params.has('noMask') ? undefined : 'YYYY-MM-DD',
-          min: '2026-11-01',
-          max: '2026-11-30',
+          ...(params.has('unbounded') ? {} : {
+            min: '2026-11-01',
+            max: '2026-11-30',
+          }),
           isDateDisabled: (d: Date) => d.getDate() === 13,
         }),
     ...(params.has('custom') ? { inputMask: undefined, dateAdapter: {

@@ -8,11 +8,14 @@ import type {
 } from '@revolist/revogrid';
 import {
   createDate,
+  isDate,
   isoAdapter,
   isoDate,
   maskDateInput,
+  utcDate,
 } from './keyboard-input';
 import type { DateChangeEvent, DateConfig } from './type';
+import { takeCalendarRequest } from './calendar-request';
 
 function updatePosition(
   cellPosition: DOMRect,
@@ -33,6 +36,15 @@ export class ColumnEditor implements EditorBase {
 
   private get keyboardFirst() {
     return this.data.column.openCalendarOnEdit === false;
+  }
+
+  private get originalValue() {
+    return this.editCell?.model?.[this.editCell.prop];
+  }
+
+  private get originalIsoValue() {
+    const value = this.originalValue;
+    return isDate(value) ? utcDate(value) : value || '';
   }
 
   constructor(
@@ -79,10 +91,26 @@ export class ColumnEditor implements EditorBase {
     this.input = input;
     this.calendar.addEventListener('input', this.onInput, true);
     input.addEventListener('keydown', this.onKeyDown);
+    if (takeCalendarRequest(this.element, this.data)) {
+      void this.calendar.show();
+      return true;
+    }
+
     void this.calendar.setFocus().then(() => {
-      if (this.input === input && this.data.column.selectOnFocus !== false) {
-        input.select();
+      if (this.input !== input) return;
+      const entered = this.editCell?.val;
+      if (typeof entered === 'string' && entered && entered !== this.data.value) {
+        input.value = entered;
+        if (this.data.column.inputMask) maskDateInput(input);
+        return;
       }
+
+      // Duet maps stored years 0001–0099 to the twentieth century.
+      const original = this.originalIsoValue;
+      if (typeof original === 'string' && /^00\d{2}-\d{2}-\d{2}$/.test(original)) {
+        input.value = original;
+      }
+      if (this.data.column.selectOnFocus !== false) input.select();
     });
     return true;
   }
@@ -100,8 +128,20 @@ export class ColumnEditor implements EditorBase {
   };
 
   private onKeyDown = (event: KeyboardEvent) => {
-    if (event.isComposing) return;
-    if (event.key === 'Escape') {
+    if (event.isComposing) {
+      event.stopPropagation();
+      return;
+    }
+    if (event.key === 'Delete' && this.data.column.inputMask) {
+      const input = this.input;
+      const caret = input?.selectionStart;
+      if (
+        input && caret != null && caret === input.selectionEnd &&
+        input.value[caret] === '-'
+      ) {
+        input.setSelectionRange(caret + 1, caret + 1);
+      }
+    } else if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
       this.closeCallback(false);
@@ -119,19 +159,15 @@ export class ColumnEditor implements EditorBase {
 
   private storageValue(value: string) {
     if (!this.data.column.valueAsDate) return value;
-    // The editor renders Date values using their UTC calendar day.
-    return value ? new Date(value + 'T00:00:00.000Z') : null;
+    if (!value) return null;
+
+    const original = this.originalValue;
+    if (isDate(original) && utcDate(original) === value) return original;
+    return new Date(value + 'T00:00:00.000Z');
   }
 
   beforeAutoSave(value: unknown) {
     return !this.keyboardFirst || value !== undefined;
-  }
-
-  private isDate(value: any): value is Date {
-    return (
-      Object.prototype.toString.call(value) === '[object Date]' &&
-      !isNaN(value.getTime())
-    );
   }
 
   getValue() {
@@ -144,7 +180,9 @@ export class ColumnEditor implements EditorBase {
     const { dateAdapter, inputMask } = this.data.column;
     const adapter = inputMask ? isoAdapter : dateAdapter ?? isoAdapter;
     const date = adapter.parse(text, createDate);
-    if (!date || !this.isDate(date)) return undefined;
+    if (!isDate(date) || date.getFullYear() < 100 || date.getFullYear() > 9999) {
+      return undefined;
+    }
 
     const value = isoDate(date);
     const { min, max } = this.calendar;
@@ -171,15 +209,6 @@ export class ColumnEditor implements EditorBase {
   }
 
   render(h: HyperFunc<VNode>) {
-    let val = '';
-    if (this.editCell) {
-      const model = this.editCell.model || {};
-      val = model[this.editCell?.prop] || '';
-    }
-    if (this.isDate(val)) {
-      val = val.toISOString().split('T')[0];
-    }
-
     return h('div', { class: 'revo-holder' }, [
       h(
         'div',
@@ -194,17 +223,17 @@ export class ColumnEditor implements EditorBase {
         [
           h('duet-date-picker', {
             ...this.data.column,
-            ...(this.keyboardFirst && this.data.column.inputMask
+            ...(this.keyboardFirst && (this.data.column.inputMask || !this.data.column.dateAdapter)
               ? { dateAdapter: isoAdapter }
               : {}),
             ref: (e: HTMLDuetDatePickerElement) => (this.calendar = e),
-            value: val,
+            value: this.originalIsoValue,
 
             onDuetChange: ({
               detail: { value, valueAsDate },
             }: CustomEvent<DateChangeEvent>) => {
               const stored = this.keyboardFirst
-                ? this.storageValue(value)
+                ? this.storageValue(isoDate(valueAsDate))
                 : this.data.column.valueAsDate ? valueAsDate : value;
               this.saveCallback(stored);
             },

@@ -12,9 +12,10 @@ it('rejects impossible and incomplete civil dates including leap years', () => {
     '2026-13-01',
     '2026-11-',
     '20261111',
+    '0099-01-01',
   ])
     expect(isoAdapter.parse(text, createDate)).toBeUndefined();
-  for (const text of ['2024-02-29', '2026-11-11', '0099-01-01'])
+  for (const text of ['2024-02-29', '2026-11-11', '0100-01-01'])
     expect(isoDate(isoAdapter.parse(text, createDate)!)).toBe(text);
 });
 it('inserts separators for compact typing/paste and keeps the caret with its digits', () => {
