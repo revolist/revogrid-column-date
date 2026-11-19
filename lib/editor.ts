@@ -1,4 +1,5 @@
 import './style.css';
+import { parseIsoDate as parseUtcDate } from '@revolist/ui/dates';
 import type { EditCell, EditorBase, HyperFunc, VNode } from '@revolist/revogrid';
 import { calendarIcon, mountCalendar, unmountCalendar } from './calendar';
 import { takeCalendarRequest } from './calendar-request';
@@ -116,8 +117,8 @@ export class ColumnEditor implements EditorBase {
     if (this.keyboardFirst) {
       if (this.data.column.inputMask) maskDateInput(input);
     } else {
-      const value = this.getValue();
-      if (value !== undefined) this.saveCallback(value);
+      const draft = this.readDraft();
+      if (draft !== undefined) this.saveCallback(this.draftValue(draft));
     }
   };
 
@@ -141,14 +142,14 @@ export class ColumnEditor implements EditorBase {
       event.stopPropagation();
       this.closeCallback(false);
     } else if (event.key === 'Enter' || event.key === 'Tab') {
-      const value = this.getValue();
-      if (value === undefined) {
+      const draft = this.readDraft();
+      if (draft === undefined) {
         event.preventDefault();
         event.stopPropagation();
         this.input?.setAttribute('aria-invalid', 'true');
         return;
       }
-      this.saveCallback(value, event.key === 'Tab');
+      this.saveCallback(this.draftValue(draft), event.key === 'Tab');
     }
   };
 
@@ -170,21 +171,32 @@ export class ColumnEditor implements EditorBase {
 
     const original = this.originalValue;
     if (isDate(original) && utcDate(original) === value) return original;
-    return new Date(value + 'T00:00:00.000Z');
+    return parseUtcDate(value);
   }
 
   beforeAutoSave(value: unknown) {
     return value !== undefined;
   }
 
-  getValue() {
+  private readDraft() {
     const column = this.data.column;
     if (!this.input || column.disabled) return undefined;
-    if (!this.input.value) {
-      return column.required ? undefined : column.valueAsDate ? null : '';
-    }
-    const date = this.getDate(this.input.value);
-    return date ? this.storageValue(date) : undefined;
+    if (!this.input.value) return column.required ? undefined : '';
+    return this.getDate(this.input.value);
+  }
+
+  private draftValue(draft: Date | '') {
+    if (draft) return this.storageValue(draft);
+    if (!this.data.column.valueAsDate) return '';
+    return this.keyboardFirst ? null : undefined;
+  }
+
+  getValue() {
+    const draft = this.readDraft();
+    if (draft === undefined) return undefined;
+    if (this.keyboardFirst) return this.draftValue(draft);
+    // Calendar-first callers and grid autosave historically get an ISO string.
+    return draft ? isoDate(draft) : '';
   }
 
   disconnectedCallback() {
@@ -200,6 +212,12 @@ export class ColumnEditor implements EditorBase {
     const date = parseIsoDate(this.originalIsoValue);
     const text = column.localization ?? {};
     const label = text.buttonLabel ?? 'Choose date';
+    const selectedDate = date && new Intl.DateTimeFormat(text.locale, {
+      day: 'numeric', month: 'long', year: 'numeric',
+    }).format(date);
+    const buttonLabel = selectedDate
+      ? `${label}, ${text.selectedDateMessage ?? 'Selected date is'} ${selectedDate}`
+      : label;
     return h('div', { class: 'revo-holder' }, [
       h('div', {
         class: 'revo-float revo-date-editor',
@@ -210,22 +228,27 @@ export class ColumnEditor implements EditorBase {
           class: 'revo-date-input',
           type: 'text',
           id: column.identifier,
-          name: column.name,
           role: column.role,
           placeholder: text.placeholder ?? 'YYYY-MM-DD',
           'aria-label': text.placeholder ?? 'YYYY-MM-DD',
           disabled: column.disabled,
           required: column.required,
           autocomplete: 'off',
+          'aria-autocomplete': 'none',
           value: date ? this.adapter.format(date) : this.originalIsoValue,
           ref: (el: HTMLInputElement) => { this.input = el; },
           onInput: this.onInput,
           onKeyDown: this.onKeyDown,
         }),
+        h('input', {
+          type: 'hidden',
+          name: column.name ?? 'date',
+          value: this.originalIsoValue,
+        }),
         h('button', {
           type: 'button',
           class: 'revo-date-toggle',
-          'aria-label': label,
+          'aria-label': buttonLabel,
           'aria-haspopup': 'dialog',
           'aria-expanded': 'false',
           disabled: column.disabled,

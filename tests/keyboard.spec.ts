@@ -341,3 +341,28 @@ test('the floating editor inherits grid typography and bundles dropdown styles',
   await expect(option).toHaveCSS('list-style-type', 'none');
   await expect(option).toHaveCSS('font-family', 'monospace');
 });
+
+test.describe('calendar-first compatibility', () => {
+  test.use({ timezoneId: 'Europe/Helsinki' });
+
+  test('retains the adapter, mounting target, form value, and local Date commits', async ({ page }) => {
+    const input = await open(page, '?calendar&custom&asDate&legacy');
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(input).toHaveAttribute('id', 'appointment');
+    await expect(input).toHaveValue('11.11.2026');
+
+    const form = page.locator('form#date-form');
+    await expect(form.locator('.revo-date-input')).toHaveCount(1);
+    expect(await form.evaluate(el => new FormData(el as HTMLFormElement).get('start-date')))
+      .toBe('2026-11-11');
+
+    await page.keyboard.press('Escape');
+    await expect(input).toBeFocused();
+    await expect(page.getByRole('button', { name: 'Pick day, Current day 11 November 2026' }))
+      .toBeVisible();
+    await input.fill('20.11.2026');
+    await expect(input).toHaveCount(0);
+    expect(await page.locator('revo-grid').evaluate(grid => grid.source[0].date.toISOString()))
+      .toBe('2026-11-19T22:00:00.000Z');
+  });
+});

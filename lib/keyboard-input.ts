@@ -1,3 +1,4 @@
+import { isValidIsoDate } from '@revolist/ui/dates';
 import type { DateAdapter } from './type';
 
 /** Validate each civil date part before creating a local Date. */
@@ -17,18 +18,16 @@ export function isDate(value: unknown): value is Date {
     !isNaN(Date.prototype.getTime.call(value));
 }
 
-export function utcDate(date: Date): string {
-  return date.toISOString().split('T')[0];
-}
+export { formatIsoDate as utcDate } from '@revolist/ui/dates';
 
 export function isoDate(date: Date): string {
   return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 export const isoAdapter: DateAdapter = {
   parse(value, make) {
-    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-    if (!match) return undefined;
-    const date = make(match[1], match[2], match[3]);
+    if (!isValidIsoDate(value)) return undefined;
+    const [year, month, day] = value.split('-');
+    const date = make(year, month, day);
     return !isNaN(date.getTime()) && isoDate(date) === value ? date : undefined;
   },
   format: isoDate,

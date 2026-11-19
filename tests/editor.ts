@@ -3,6 +3,9 @@ import DateColumn from '../lib';
 void defineCustomElements();
 const grid = document.querySelector('revo-grid')!;
 const params = new URLSearchParams(location.search);
+const legacyForm = document.createElement('form');
+legacyForm.id = 'date-form';
+if (params.has('legacy')) document.body.append(legacyForm);
 grid.columnTypes = { date: new DateColumn() };
 grid.columns = [
   {
@@ -30,6 +33,16 @@ grid.columns = [
     } } : {}),
     ...(params.has('mask') ? { inputMask: 'YYYY-MM-DD' } : {}),
     ...(params.has('asDate') ? { valueAsDate: true } : {}),
+    ...(params.has('legacy') ? {
+      appendTo: legacyForm,
+      identifier: 'appointment',
+      name: 'start-date',
+      localization: {
+        locale: 'en-GB',
+        buttonLabel: 'Pick day',
+        selectedDateMessage: 'Current day',
+      },
+    } : {}),
     ...(params.has('localized') ? {
       localization: {
         locale: 'de-DE',

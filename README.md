@@ -59,3 +59,9 @@ saves `null` in that mode, or `''` otherwise.
 
 Run `pnpm test` for unit tests and `pnpm test:browser` for browser regressions
 (after `pnpm exec playwright install chromium` on a new machine).
+
+Existing column definitions can keep their `dateAdapter`, `appendTo`, and
+`valueAsDate` options. Calendar-first commits still produce local `Date`
+objects when `valueAsDate` is enabled, and the named form field contains the
+ISO date. Calendar captions use the configured locale. The picker can be
+dismissed with Escape or a click outside.
