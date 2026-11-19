@@ -37,7 +37,7 @@ test('keyboard-first mode focuses/selects and stages masked typing until Tab, th
 test('invalid dates stay editable and Escape cancels', async ({
   page,
 }) => {
-  const input = await open(page);
+  const input = await open(page, '?bounded');
   for (const text of ['2026-02-30', '2026-11-13', '2026-11-', '2026-12-01']) {
     await input.fill(text);
     await page.keyboard.press('Enter');
@@ -56,8 +56,14 @@ test('calendar remains available and default calendar-first behavior remains unc
 }) => {
   await open(page);
   await page.locator('.revo-date-toggle').click();
-  await expect(page.locator('.revo-date-dialog')).toBeVisible();
-  await page.getByRole('gridcell', { name: /20 November 2026/ }).click();
+  const picker = page.getByRole('dialog');
+  const year = picker.getByRole('combobox', { name: 'Choose year' });
+  await year.click();
+  await picker.getByRole('option', { name: '2027', exact: true }).click();
+  await expect(picker.getByRole('grid', { name: /November 2027/ })).toBeVisible();
+  await year.click();
+  await picker.getByRole('option', { name: '2026', exact: true }).click();
+  await picker.getByRole('gridcell', { name: /20 November 2026/ }).click();
   await expect(page.locator('.revo-float')).toHaveCount(0);
   expect(
     await page.locator('revo-grid').evaluate((el: any) => el.source[0].date),
@@ -202,7 +208,7 @@ test.describe('Date display west of UTC', () => {
 });
 
 test('rejects dates outside the supported calendar years', async ({ page }) => {
-  const input = await open(page, '?unbounded');
+  const input = await open(page);
   await input.fill('0099-01-01');
   await page.keyboard.press('Enter');
   await expect(input).toHaveValue('0099-01-01');
@@ -279,7 +285,7 @@ test('a canceled cell calendar request leaves the next edit keyboard-first', asy
 });
 
 test('shows a stored early year without silently changing its century', async ({ page }) => {
-  await page.goto('/tests/editor.html?unbounded');
+  await page.goto('/tests/editor.html');
   const grid = page.locator('revo-grid');
   await grid.evaluate(el => {
     el.source = [{ date: '0099-01-01', next: 'next' }];
@@ -293,7 +299,7 @@ test('shows a stored early year without silently changing its century', async ({
 });
 
 test('clicking outside or pressing Escape dismisses the calendar and preserves the draft', async ({ page }) => {
-  const input = await open(page, '?localized');
+  const input = await open(page, '?localized&bounded');
   await input.fill('2026-11');
   await page.keyboard.press('Alt+ArrowDown');
 
