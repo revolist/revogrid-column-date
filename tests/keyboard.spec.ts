@@ -292,7 +292,7 @@ test('shows a stored early year without silently changing its century', async ({
   expect(await grid.evaluate(el => el.source[0].date)).toBe('0099-01-01');
 });
 
-test('dismissing the shared calendar restores the grid input and preserves its draft', async ({ page }) => {
+test('clicking outside or pressing Escape dismisses the calendar and preserves the draft', async ({ page }) => {
   const input = await open(page, '?localized');
   await input.fill('2026-11');
   await page.keyboard.press('Alt+ArrowDown');
@@ -300,9 +300,16 @@ test('dismissing the shared calendar restores the grid input and preserves its d
   const picker = page.getByRole('dialog', { name: 'Datum wählen' });
   await expect(picker).toBeVisible();
   await expect(picker.getByRole('grid')).toHaveCount(1);
-  await expect(picker.getByRole('button', { name: 'Schließen' })).toBeVisible();
+  await expect(picker.getByRole('button', { name: 'Schließen' })).toHaveCount(0);
   await expect(picker.getByRole('gridcell', { name: /13\. November 2026/ })).toBeDisabled();
 
+  await page.mouse.click(5, 5);
+  await expect(picker).toBeHidden();
+  await expect(input).toBeFocused();
+  await expect(input).toHaveValue('2026-11');
+
+  await page.keyboard.press('Alt+ArrowDown');
+  await expect(picker).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(picker).toBeHidden();
   await expect(input).toBeFocused();

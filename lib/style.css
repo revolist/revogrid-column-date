@@ -31,7 +31,7 @@
     outline-offset: -1px;
 }
 
-.revo-date-toggle, .revo-date-dismiss {
+.revo-date-toggle {
     border: 0;
     background: transparent;
     color: inherit;
@@ -60,12 +60,6 @@
 
 .revo-date-dialog::backdrop {
     background: transparent;
-}
-
-.revo-date-dismiss {
-    display: block;
-    margin: 4px 0 0 auto;
-    font-size: 1.25rem;
 }
 
 revogr-data .calendar {

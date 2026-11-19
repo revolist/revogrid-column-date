@@ -249,12 +249,6 @@ export class ColumnEditor implements EditorBase {
           },
         }, [
           h('div', { ref: (el: HTMLElement) => { this.picker = el; } }),
-          h('button', {
-            class: 'revo-date-dismiss',
-            type: 'button',
-            'aria-label': text.closeLabel ?? 'Close window',
-            onClick: () => this.dialog?.close(),
-          }, '×'),
         ]),
       ]),
     ]);
