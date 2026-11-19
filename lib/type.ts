@@ -20,8 +20,6 @@ export interface DateConfig extends ColumnDataSchemaModel {
     selectOnFocus?: boolean;
     /** Insert ISO separators during keyboard-first typing. Use without a custom dateAdapter. */
     inputMask?: 'YYYY-MM-DD';
-    /** Localized validation message for incomplete, unavailable or invalid dates. */
-    invalidDateMessage?: string;
     appendTo?: 'body' | Element;
     /** Optional Duet adapter used to parse and format the date editor input. */
     dateAdapter?: DateAdapter;

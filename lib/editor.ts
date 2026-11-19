@@ -29,13 +29,8 @@ export class ColumnEditor implements EditorBase {
   private calendar: HTMLDuetDatePickerElement;
   private revoFloat: HTMLElement;
   private input?: HTMLInputElement;
-  private initializing = false;
-  private disposed = false;
-  private calendarOpen = false;
-  private typing = false;
-  private composing = false;
-  private disposeInput?: () => void;
-  private cancelReady?: () => void;
+  private inputObserver?: MutationObserver;
+
   private get keyboardFirst() {
     return this.data.column.openCalendarOnEdit === false;
   }
@@ -68,121 +63,68 @@ export class ColumnEditor implements EditorBase {
     );
     if (!this.keyboardFirst) {
       this.calendar?.show();
-      return;
-    }
-    if (!this.initializing) {
-      this.initializing = true;
-      void this.focusInput();
+    } else if (!this.input && !this.inputObserver && !this.focusInput()) {
+      // Duet renders its light-DOM input asynchronously.
+      this.inputObserver = new MutationObserver(() => this.focusInput());
+      this.inputObserver.observe(this.calendar, { childList: true, subtree: true });
     }
   }
 
-  private async focusInput() {
-    const calendar = this.calendar;
-    // Duet's custom-element build has no componentOnReady method. Wait for its
-    // public light-DOM input before calling its documented focus API.
-    const input =
-      calendar.querySelector('input') ??
-      (await new Promise<HTMLInputElement | null>((resolve) => {
-        const finish = (input: HTMLInputElement | null) => {
-          observer.disconnect();
-          this.cancelReady = undefined;
-          resolve(input);
-        };
-        const observer = new MutationObserver(() => {
-          const input = calendar.querySelector('input');
-          if (input) finish(input);
-        });
-        this.cancelReady = () => finish(null);
-        observer.observe(calendar, { childList: true, subtree: true });
-      }));
-    if (this.disposed || this.calendar !== calendar) return;
-    // Duet exposes focus, but no public selection or input-event extension hook.
-    if (!input) return;
+  private focusInput() {
+    const input = this.calendar.querySelector('input:not([type="hidden"])');
+    if (!(input instanceof HTMLInputElement)) return false;
+
+    this.inputObserver?.disconnect();
+    this.inputObserver = undefined;
     this.input = input;
-    const normalize = (event: Event) => {
-      if (event.target !== input) return;
-      this.typing = true;
-      if (
-        !this.composing &&
-        !(event as InputEvent).isComposing &&
-        this.data.column.inputMask
-      )
-        maskDateInput(input);
-      this.validate();
-    };
-    const keydown = (event: KeyboardEvent) => {
-      if (event.target !== input || this.composing || event.isComposing) return;
-      if (event.key === 'Escape') {
+    this.calendar.addEventListener('input', this.onInput, true);
+    input.addEventListener('keydown', this.onKeyDown);
+    void this.calendar.setFocus().then(() => {
+      if (this.input === input && this.data.column.selectOnFocus !== false) {
+        input.select();
+      }
+    });
+    return true;
+  }
+
+  private onInput = (event: Event) => {
+    const input = this.input;
+    if (!input || event.target !== input) return;
+
+    // Keep text edits staged. Duet would otherwise emit a change immediately.
+    event.stopPropagation();
+    input.removeAttribute('aria-invalid');
+    if (this.data.column.inputMask && !(event as InputEvent).isComposing) {
+      maskDateInput(input);
+    }
+  };
+
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.isComposing) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeCallback(false);
+    } else if (event.key === 'Enter' || event.key === 'Tab') {
+      const value = this.getValue();
+      if (value === undefined) {
         event.preventDefault();
         event.stopPropagation();
-        this.closeCallback(false);
-      } else if (event.key === 'Enter' || event.key === 'Tab') {
-        if (!this.validate()) {
-          event.preventDefault();
-          event.stopPropagation();
-          return;
-        }
-        this.saveCallback(this.getValue(), event.key === 'Tab');
+        this.input?.setAttribute('aria-invalid', 'true');
+        return;
       }
-    };
-    const focus = (event: FocusEvent) => {
-      this.typing = event.target === input;
-    };
-    const start = () => {
-      this.composing = true;
-    };
-    const end = () => {
-      this.composing = false;
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-    };
-    calendar.addEventListener('input', normalize, true);
-    calendar.addEventListener('keydown', keydown, true);
-    calendar.addEventListener('focusin', focus);
-    input.addEventListener('compositionstart', start);
-    input.addEventListener('compositionend', end);
-    this.disposeInput = () => {
-      calendar.removeEventListener('input', normalize, true);
-      calendar.removeEventListener('keydown', keydown, true);
-      calendar.removeEventListener('focusin', focus);
-      input.removeEventListener('compositionstart', start);
-      input.removeEventListener('compositionend', end);
-    };
-    await calendar.setFocus();
-    if (!this.disposed && this.data.column.selectOnFocus !== false)
-      input.select();
+      this.saveCallback(value, event.key === 'Tab');
+    }
+  };
+
+  private storageValue(value: string) {
+    if (!this.data.column.valueAsDate) return value;
+    // The editor renders Date values using their UTC calendar day.
+    return value ? new Date(value + 'T00:00:00.000Z') : null;
   }
 
-  private parsedDate(): Date | undefined {
-    const text = this.input?.value ?? '';
-    const adapter = this.data.column.inputMask
-      ? isoAdapter
-      : this.calendar.dateAdapter;
-    return adapter.parse(text, createDate);
-  }
-  private validate(): boolean {
-    if (!this.input || this.composing) return false;
-    const text = this.input.value;
-    const date = this.parsedDate();
-    const value = date && isoDate(date);
-    const valid =
-      !this.calendar.disabled &&
-      (text === ''
-        ? !this.calendar.required
-        : !!date &&
-          !isNaN(date.getTime()) &&
-          (!this.calendar.min || value! >= this.calendar.min) &&
-          (!this.calendar.max || value! <= this.calendar.max) &&
-          !this.calendar.isDateDisabled(date));
-    const message = valid
-      ? ''
-      : (this.data.column.invalidDateMessage ?? 'Enter a valid date.');
-    this.input.setCustomValidity(message);
-    this.input.setAttribute('aria-invalid', String(!valid));
-    this.input.title = message;
-    return valid;
-  }
-  beforeAutoSave() {
-    return !this.keyboardFirst || this.validate();
+  beforeAutoSave(value: unknown) {
+    return !this.keyboardFirst || value !== undefined;
   }
 
   private isDate(value: any): value is Date {
@@ -193,21 +135,36 @@ export class ColumnEditor implements EditorBase {
   }
 
   getValue() {
-    if (!this.keyboardFirst || !this.input) return this.calendar?.value;
-    const date = this.parsedDate();
-    return this.data.column.valueAsDate
-      ? (date ?? null)
-      : date
-        ? isoDate(date)
-        : '';
+    if (!this.keyboardFirst) return this.calendar?.value;
+    if (!this.input || this.calendar.disabled) return undefined;
+
+    const text = this.input.value;
+    if (!text) return this.calendar.required ? undefined : this.storageValue('');
+
+    const { dateAdapter, inputMask } = this.data.column;
+    const adapter = inputMask ? isoAdapter : dateAdapter ?? isoAdapter;
+    const date = adapter.parse(text, createDate);
+    if (!date || !this.isDate(date)) return undefined;
+
+    const value = isoDate(date);
+    const { min, max } = this.calendar;
+    if (
+      (min && value < min) ||
+      (max && value > max) ||
+      this.calendar.isDateDisabled(date)
+    ) {
+      return undefined;
+    }
+    return this.storageValue(value);
   }
 
   disconnectedCallback() {
-    this.disposed = true;
-    this.cancelReady?.();
-    this.disposeInput?.();
+    this.inputObserver?.disconnect();
+    this.inputObserver = undefined;
+    this.calendar?.removeEventListener('input', this.onInput, true);
+    this.input?.removeEventListener('keydown', this.onKeyDown);
     this.input = undefined;
-    this.calendar?.hide();
+    this.calendar?.hide(this.keyboardFirst ? false : undefined);
     this.revoFloat?.remove();
     this.calendar = null;
     this.revoFloat = null;
@@ -237,25 +194,21 @@ export class ColumnEditor implements EditorBase {
         [
           h('duet-date-picker', {
             ...this.data.column,
-            ...(this.data.column.inputMask ? { dateAdapter: isoAdapter } : {}),
+            ...(this.keyboardFirst && this.data.column.inputMask
+              ? { dateAdapter: isoAdapter }
+              : {}),
             ref: (e: HTMLDuetDatePickerElement) => (this.calendar = e),
             value: val,
 
             onDuetChange: ({
               detail: { value, valueAsDate },
             }: CustomEvent<DateChangeEvent>) => {
-              if (this.keyboardFirst && (!this.calendarOpen || this.typing))
-                return;
-              this.saveCallback(
-                this.data.column.valueAsDate ? valueAsDate : value,
-              );
-            },
-            onDuetClose: () => {
-              this.calendarOpen = false;
+              const stored = this.keyboardFirst
+                ? this.storageValue(value)
+                : this.data.column.valueAsDate ? valueAsDate : value;
+              this.saveCallback(stored);
             },
             onDuetOpen: () => {
-              this.calendarOpen = true;
-              this.typing = false;
               const { bottom } = this.revoFloat?.getBoundingClientRect() || {};
               const { clientHeight } = document.body;
               const position = bottom + 300 > clientHeight ? 'top' : 'bottom';

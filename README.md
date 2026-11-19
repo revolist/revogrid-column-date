@@ -49,12 +49,10 @@ staged until commit. The existing calendar button remains available.
 keep the caret without selecting. `inputMask` is optional in keyboard-first mode and uses ISO input
 formatting; omit it when supplying a custom Duet `dateAdapter`.
 
-Keyboard commits validate complete real dates, `required`, `min`, `max` and
-`isDateDisabled`. Invalid drafts stay editable. Translate their validation text
-with `invalidDateMessage` (default: `Enter a valid date.`). Existing Duet
-`localization` continues to control calendar labels. `valueAsDate: true` saves a
-`Date` object; clearing an optional value saves `null` in that mode, or `''`
-otherwise.
+Keyboard commits validate complete dates and respect `required`, `min`, `max`
+and `isDateDisabled`. Invalid drafts stay editable. In keyboard-first mode,
+`valueAsDate: true` saves dates at UTC midnight so reopening shows the same day.
+Clearing an optional value saves `null` in that mode, or `''` otherwise.
 
 Run `pnpm test` for unit tests and `pnpm test:browser` for browser regressions
 (after `pnpm exec playwright install chromium` on a new machine).

@@ -14,8 +14,7 @@ grid.columns = [
       : {
           openCalendarOnEdit: false,
           selectOnFocus: true,
-          inputMask: 'YYYY-MM-DD',
-          invalidDateMessage: 'Datum prüfen',
+          inputMask: params.has('noMask') ? undefined : 'YYYY-MM-DD',
           min: '2026-11-01',
           max: '2026-11-30',
           isDateDisabled: (d: Date) => d.getDate() === 13,
@@ -27,6 +26,7 @@ grid.columns = [
       },
       format: (date: Date) => `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`,
     } } : {}),
+    ...(params.has('mask') ? { inputMask: 'YYYY-MM-DD' } : {}),
     ...(params.has('asDate') ? { valueAsDate: true } : {}),
   },
   { prop: 'next', size: 160 },
